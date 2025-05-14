@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Eu Faço Você Joga! - Competição de Jogos Indie</title>
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="src/images/favicon/favicon.svg">
+  <link rel="icon" type="image/png" sizes="96x96" href="src/images/favicon/favicon-96x96.png">
+  <link rel="apple-touch-icon" href="src/images/favicon/apple-touch-icon.png">
+  <link rel="manifest" href="src/images/favicon/site.webmanifest">
+  
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  
+  <!-- Font Awesome -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Custom CSS -->
+  <link href="src/css/styles.css" rel="stylesheet">
+</head>
+<body>
+  <!-- Navbar será injetado via JavaScript -->
+  <header id="navbar-container"></header>
+  
+  <!-- Header da página inicial -->
+  <section class="site-header text-center">
+    <div class="container">
+      <h1 class="display-4 fw-bold mb-4">Eu Faço Você Joga!</h1>
+      <p class="lead fs-4 mb-5">A maior competição de jogos indie do Brasil</p>
+      <div class="d-flex justify-content-center gap-3">
+        <a href="cadastro.html" class="btn btn-light btn-lg px-4 py-2">
+          <i class="fas fa-gamepad me-2"></i>Inscrever Jogo
+        </a>
+        <a href="jogos.html" class="btn btn-outline-light btn-lg px-4 py-2">
+          <i class="fas fa-play me-2"></i>Ver Jogos
+        </a>
+      </div>
+    </div>
+  </section>
+  
+  <!-- Sobre a competição -->
+  <section class="py-5">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-6 mb-4 mb-lg-0">
+          <h2 class="page-title">Sobre a Competição</h2>
+          <p class="mb-4">A <strong>"Eu Faço Você Joga!"</strong> é uma competição anual de desenvolvimento de jogos indie que visa incentivar a criatividade e inovação na indústria de games brasileira.</p>
+          <p class="mb-4">Nosso objetivo é proporcionar uma plataforma para que desenvolvedores independentes possam mostrar seus talentos, receber feedback da comunidade e conquistar reconhecimento pelo seu trabalho.</p>
+          <p class="mb-4">A competição está aberta para desenvolvedores de todos os níveis, desde iniciantes até profissionais experientes. Não importa se o seu jogo foi feito por uma pessoa só ou por uma pequena equipe - o que importa é a criatividade e a qualidade!</p>
+        </div>
+        <div class="col-lg-6">
+          <div class="card border-0 shadow-sm">
+            <div class="card-body">
+              <h3 class="h4 card-title mb-4">Como Funciona</h3>
+              <div class="d-flex mb-3">
+                <div class="flex-shrink-0">
+                  <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                    <i class="fas fa-upload"></i>
+                  </div>
+                </div>
+                <div class="flex-grow-1 ms-3">
+                  <h4 class="h5">Cadastre seu jogo</h4>
+                  <p class="text-muted">Inscreva seu jogo na competição preenchendo o formulário com todas as informações.</p>
+                </div>
+              </div>
+              <div class="d-flex mb-3">
+                <div class="flex-shrink-0">
+                  <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                    <i class="fas fa-users"></i>
+                  </div>
+                </div>
+                <div class="flex-grow-1 ms-3">
+                  <h4 class="h5">Receba avaliações</h4>
+                  <p class="text-muted">A comunidade joga e avalia seu jogo com notas de 1 a 5 estrelas.</p>
+                </div>
+              </div>
+              <div class="d-flex mb-3">
+                <div class="flex-shrink-0">
+                  <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                    <i class="fas fa-trophy"></i>
+                  </div>
+                </div>
+                <div class="flex-grow-1 ms-3">
+                  <h4 class="h5">Ranking e Premiação</h4>
+                  <p class="text-muted">Os jogos melhor avaliados entram no ranking e concorrem a prêmios.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <!-- Ranking dos jogos -->
+  <section class="py-5 bg-light">
+    <div class="container">
+      <h2 class="page-title mb-4">Top Jogos</h2>
+      <p class="text-muted mb-4">Confira os jogos mais bem avaliados da competição!</p>
+      <div id="games-ranking" class="row">
+        <!-- Os jogos serão carregados dinamicamente via JavaScript -->
+        <div class="col-12 text-center py-5">
+          <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Carregando...</span>
+          </div>
+        </div>
+      </div>
+      <div class="text-center mt-4">
+        <a href="jogos.html" class="btn btn-primary px-4 py-2">
+          <i class="fas fa-gamepad me-2"></i>Ver Todos os Jogos
+        </a>
+      </div>
+    </div>
+  </section>
+  
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6">
+          <h3 class="h5 mb-3">Eu Faço Você Joga!</h3>
+          <p>A maior competição de jogos indie do Brasil</p>
+          <p class="mb-0">&copy; 2025 - Todos os direitos reservados</p>
+        </div>
+        <div class="col-md-6 text-md-end mt-4 mt-md-0">
+          <ul class="list-inline mb-0">
+            <li class="list-inline-item">
+              <a href="#" class="text-white text-decoration-none">
+                <i class="fab fa-twitter fa-lg"></i>
+              </a>
+            </li>
+            <li class="list-inline-item ms-3">
+              <a href="#" class="text-white text-decoration-none">
+                <i class="fab fa-facebook fa-lg"></i>
+              </a>
+            </li>
+            <li class="list-inline-item ms-3">
+              <a href="#" class="text-white text-decoration-none">
+                <i class="fab fa-instagram fa-lg"></i>
+              </a>
+            </li>
+            <li class="list-inline-item ms-3">
+              <a href="#" class="text-white text-decoration-none">
+                <i class="fab fa-discord fa-lg"></i>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Bootstrap JS Bundle with Popper -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  
+  <!-- Firebase SDK -->
+  <script type="module">
+    import { app } from './src/js/firebase-config.js';
+    import Navbar from './src/components/navbar.js';
+    import FirebaseService from './src/js/firebase-service.js';
+    import ToastManager from './src/js/toast-manager.js';
+    import { formatDate, createRatingStars, truncateText, showLoader, hideLoader } from './src/js/utils.js';
+    
+    // Inicializa a navbar
+    const navbar = new Navbar();
+    document.getElementById('navbar-container').appendChild(navbar.getElement());
+    navbar.setActive('index.html');
+    
+    // Carrega o ranking dos jogos
+    async function loadTopGames() {
+      const gamesContainer = document.getElementById('games-ranking');
+      showLoader(gamesContainer);
+      
+      try {
+        // Busca os jogos ordenados por avaliação
+        const games = await FirebaseService.getAllGames();
+        
+        // Limpa o container
+        gamesContainer.innerHTML = '';
+        
+        // Exibe apenas os top 3 jogos ou todos se forem menos que 3
+        const topGames = games.slice(0, Math.min(3, games.length));
+        
+        if (topGames.length === 0) {
+          gamesContainer.innerHTML = `
+            <div class="col-12 text-center py-5">
+              <div class="alert alert-info">
+                <i class="fas fa-info-circle me-2"></i>Ainda não há jogos cadastrados. Seja o primeiro a cadastrar!
+              </div>
+            </div>
+          `;
+          return;
+        }
+        
+        // Cria cards para cada jogo
+        topGames.forEach((game, index) => {
+          const col = document.createElement('div');
+          col.className = 'col-md-4 mb-4';
+          
+          // Determina qual medalha exibir (apenas para os 3 primeiros)
+          let medalIcon = '';
+          let medalClass = '';
+          
+          if (index === 0) {
+            medalIcon = '<i class="fas fa-medal text-warning me-1"></i>';
+            medalClass = 'border-warning';
+          } else if (index === 1) {
+            medalIcon = '<i class="fas fa-medal text-secondary me-1"></i>';
+            medalClass = 'border-secondary';
+          } else if (index === 2) {
+            medalIcon = '<i class="fas fa-medal text-danger me-1"></i>';
+            medalClass = 'border-danger';
+          }
+          
+          // Cria o card do jogo
+          col.innerHTML = `
+            <div class="card h-100 game-card ${medalClass} ${index === 0 ? 'border-3' : ''}">
+              <div class="position-relative">
+                <img src="${game.imageUrl || 'src/images/game-placeholder.jpg'}" class="card-img-top game-cover" alt="${game.name}">
+                <div class="position-absolute top-0 end-0 p-2">
+                  <span class="badge bg-dark">${medalIcon}${index + 1}º</span>
+                </div>
+              </div>
+              <div class="card-body">
+                <h5 class="card-title">${game.name}</h5>
+                <h6 class="card-subtitle mb-2 text-muted">${game.developer}</h6>
+                <p class="card-text">${truncateText(game.description, 100)}</p>
+                <div class="mb-3">
+                  ${createRatingStars(game.averageRating, game.ratingCount, game.id).outerHTML}
+                </div>
+                <a href="detalhes.html?id=${game.id}" class="btn btn-sm btn-primary">
+                  <i class="fas fa-info-circle me-1"></i>Ver Detalhes
+                </a>
+                <a href="${game.gameUrl}" target="_blank" class="btn btn-sm btn-outline-primary ms-1">
+                  <i class="fas fa-gamepad me-1"></i>Jogar
+                </a>
+              </div>
+              <div class="card-footer text-muted small">
+                Cadastrado em: ${formatDate(game.createdAt)}
+              </div>
+            </div>
+          `;
+          
+          gamesContainer.appendChild(col);
+        });
+      } catch (error) {
+        console.error('Erro ao carregar jogos:', error);
+        ToastManager.error('Erro ao carregar jogos. Tente novamente mais tarde.');
+        
+        gamesContainer.innerHTML = `
+          <div class="col-12 text-center">
+            <div class="alert alert-danger">
+              <i class="fas fa-exclamation-triangle me-2"></i>Erro ao carregar jogos. Tente novamente mais tarde.
+            </div>
+          </div>
+        `;
+      }
+    }
+    
+    // Carrega os jogos quando a página for carregada
+    document.addEventListener('DOMContentLoaded', loadTopGames);
+  </script>
+</body>
+</html>
