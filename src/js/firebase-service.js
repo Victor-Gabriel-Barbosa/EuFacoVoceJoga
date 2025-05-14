@@ -205,6 +205,78 @@ class FirebaseService {
       throw error;
     }
   }
+
+  // Adicionar uma avaliação por critérios para um jogo
+  async rateCriteriaGame(gameId, criteriaRatings) {
+    try {
+      // Adiciona a avaliação na subcoleção de avaliações
+      const ratingData = {
+        criteriaRatings: criteriaRatings,
+        averageRating: Object.values(criteriaRatings).reduce((sum, val) => sum + val, 0) / 
+                      Object.values(criteriaRatings).length,
+        timestamp: serverTimestamp()
+      };
+      
+      await addDoc(collection(db, GAMES_COLLECTION, gameId, RATINGS_COLLECTION), ratingData);
+      
+      // Recalcula a média das avaliações
+      const ratingsQuery = collection(db, GAMES_COLLECTION, gameId, RATINGS_COLLECTION);
+      const querySnapshot = await getDocs(ratingsQuery);
+      
+      // Inicializa contadores
+      const criteriaScores = {};
+      Object.keys(criteriaRatings).forEach(key => {
+        criteriaScores[key] = 0;
+      });
+      
+      let totalAverageRating = 0;
+      let count = 0;
+      
+      // Soma todas as avaliações
+      querySnapshot.forEach((doc) => {
+        const data = doc.data();
+        
+        if (data.criteriaRatings) {
+          // Se for avaliação por critérios
+          Object.entries(data.criteriaRatings).forEach(([key, value]) => {
+            criteriaScores[key] = (criteriaScores[key] || 0) + value;
+          });
+          totalAverageRating += data.averageRating;
+        } else if (data.rating) {
+          // Se for avaliação simples (compatibilidade)
+          totalAverageRating += data.rating;
+        }
+        
+        count++;
+      });
+      
+      // Calcula médias por critério
+      const averageCriteriaScores = {};
+      Object.entries(criteriaScores).forEach(([key, total]) => {
+        averageCriteriaScores[key] = count > 0 ? total / count : 0;
+      });
+      
+      // Calcula média geral
+      const averageRating = count > 0 ? totalAverageRating / count : 0;
+      
+      // Atualiza o documento do jogo com a nova média
+      const gameRef = doc(db, GAMES_COLLECTION, gameId);
+      await updateDoc(gameRef, {
+        averageRating: averageRating,
+        criteriaRatings: averageCriteriaScores,
+        ratingCount: count
+      });
+      
+      return {
+        averageRating,
+        criteriaRatings: averageCriteriaScores,
+        ratingCount: count
+      };
+    } catch (error) {
+      console.error("Error rating game with criteria: ", error);
+      throw error;
+    }
+  }
 }
 
 export default new FirebaseService();

@@ -111,6 +111,148 @@ footer {
   min-height: 200px;
 }
 
+/* Estilos para avaliação por critérios */
+.criteria-rating {
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 15px;
+  border: 1px solid rgba(108, 92, 231, 0.2);
+  border-radius: 10px;
+}
+
+.criteria-row {
+  margin-bottom: 8px;
+}
+
+.criteria-label {
+  min-width: 120px;
+}
+
+.criteria-value {
+  min-width: 32px;
+  text-align: center;
+  transition: background-color 0.3s ease;
+}
+
+.criteria-slider .form-range {
+  height: 8px;
+}
+
+.criteria-slider .form-range::-webkit-slider-thumb {
+  background: var(--primary-color);
+}
+
+.criteria-slider .form-range::-moz-range-thumb {
+  background: var(--primary-color);
+}
+
+.criteria-ratings-display .progress {
+  height: 12px;
+  background-color: rgba(108, 92, 231, 0.1);
+}
+
+.criteria-ratings-display .progress-bar {
+  background-color: var(--primary-color);
+}
+
+/* Personalização dos sliders com marcadores */
+.form-range {
+  position: relative;
+}
+
+.form-range::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 100%;
+  height: 2px;
+  background: repeating-linear-gradient(
+    to right,
+    rgba(0, 0, 0, 0.1),
+    rgba(0, 0, 0, 0.1) 1px,
+    transparent 1px,
+    transparent 10%
+  );
+  pointer-events: none;
+}
+
+.form-range::-webkit-slider-thumb {
+  box-shadow: 0 0 0 3px rgba(108, 92, 231, 0.3);
+}
+
+.form-range::-moz-range-thumb {
+  box-shadow: 0 0 0 3px rgba(108, 92, 231, 0.3);
+}
+
+.form-range::-webkit-slider-runnable-track {
+  background: linear-gradient(to right, 
+    #dc3545 0%, #dc3545 20%, 
+    #ffc107 20%, #ffc107 40%, 
+    #0dcaf0 40%, #0dcaf0 60%, 
+    #198754 60%, #198754 100%);
+  height: 4px;
+  border-radius: 2px;
+}
+
+.form-range::-moz-range-track {
+  background: linear-gradient(to right, 
+    #dc3545 0%, #dc3545 20%, 
+    #ffc107 20%, #ffc107 40%, 
+    #0dcaf0 40%, #0dcaf0 60%, 
+    #198754 60%, #198754 100%);
+  height: 4px;
+  border-radius: 2px;
+}
+
+/* Adiciona marcadores de valores mínimo e máximo */
+.criteria-slider-container {
+  position: relative;
+  margin-bottom: 5px;
+  padding-bottom: 20px;
+}
+
+.criteria-slider-container::after {
+  content: "1";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  font-size: 10px;
+  color: #6c757d;
+}
+
+.criteria-slider-container::before {
+  content: "10";
+  position: absolute;
+  right: 35px; /* Espaço para o badge */
+  bottom: 0;
+  font-size: 10px;
+  color: #6c757d;
+}
+
+/* Media queries para responsividade da avaliação */
+@media (max-width: 576px) {
+  .criteria-row {
+    flex-direction: column;
+    align-items: flex-start !important;
+  }
+  
+  .criteria-label {
+    margin-bottom: 5px;
+  }
+  
+  .criteria-slider {
+    width: 100%;
+  }
+}
+
+@media (min-width: 768px) {
+  .criteria-ratings-display .progress {
+    width: 200px;
+  }
+}
+
 /* Responsividade */
 @media (max-width: 768px) {
   .site-header {
@@ -120,4 +262,34 @@ footer {
   .game-card {
     margin-bottom: 20px;
   }
+}
+
+/* Estilos para o modal de avaliação */
+.rate-game-btn {
+  transition: all 0.2s ease;
+}
+
+.rate-game-btn:hover {
+  transform: scale(1.05);
+}
+
+#ratingModal .modal-content {
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+#ratingModal .modal-header {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+#ratingModal .modal-body {
+  padding: 20px;
+}
+
+#ratingModal .criteria-rating {
+  border-radius: 8px;
+  background-color: #f8f9fa;
+  border: 1px solid rgba(0,0,0,0.05);
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
 }
