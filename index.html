@@ -185,26 +185,25 @@
     // Inicializa a navbar
     const navbar = new Navbar();
     document.getElementById('navbar-container').appendChild(navbar.getElement());
-    navbar.setActive('index.html');
-      // Carrega o ranking dos jogos
+    navbar.setActive('index.html');    // Carrega o ranking dos jogos
     async function loadTopGames() {
-      const gamesContainer = document.getElementById('games-ranking');      const ratingModal = new bootstrap.Modal(document.getElementById('ratingModal'));
+      const gamesContainer = document.getElementById('games-ranking');      
+      const ratingModal = new bootstrap.Modal(document.getElementById('ratingModal'));
       const ratingCriteriaContainer = document.getElementById('rating-criteria-container');
       const ratingModalTitle = document.getElementById('ratingModalLabel');
       let currentGameForRating = null;
-      let games = []; // Armazena todos os jogos para uso posterior
       
       showLoader(gamesContainer);
       
       try {
         // Busca os jogos ordenados por avaliação
-        games = await FirebaseService.getAllGames();
+        window.allGames = await FirebaseService.getAllGames();
         
         // Limpa o container
         gamesContainer.innerHTML = '';
         
         // Exibe apenas os top 3 jogos ou todos se forem menos que 3
-        const topGames = games.slice(0, Math.min(3, games.length));
+        const topGames = window.allGames.slice(0, Math.min(3, window.allGames.length));
         
         if (topGames.length === 0) {
           gamesContainer.innerHTML = `
@@ -317,31 +316,62 @@
         ToastManager.error('Erro ao registrar avaliação. Tente novamente.');
       }
     });
-    
-    // Evento de clique nos botões de avaliação
+      // Evento de clique nos botões de avaliação
     document.addEventListener('click', function(e) {
       if (e.target.closest('.rate-game-btn')) {
         const btn = e.target.closest('.rate-game-btn');
         const gameId = btn.dataset.gameId;
         
-        // Encontra o jogo para avaliação
-        const game = games.find(g => g.id === gameId);
-        if (game) {
-          // Atualiza o título do modal
-          ratingModalTitle.textContent = `Avaliar: ${game.name}`;
-          
-          // Limpa o container
-          ratingCriteriaContainer.innerHTML = '';
-            // Define o jogo atual para avaliação
-          currentGameForRating = game;
-          
-          // Cria e adiciona o formulário de avaliação
-          const criteriaForm = createCriteriaRating(game.id, game.criteriaRatings);
-          ratingCriteriaContainer.appendChild(criteriaForm);
-          
-          // Exibe o modal
-          ratingModal.show();
+        // Verifica se o usuário está logado
+        const currentUser = FirebaseService.getCurrentUser();
+        if (!currentUser) {
+          ToastManager.warning('Você precisa estar logado para avaliar este jogo.');
+          return;
         }
+        
+        // Busca o jogo para avaliação (usamos a função para ter acesso à variável games no escopo adequado)
+        const loadGameForRating = async () => {
+          try {
+            // Se os jogos não foram carregados ainda, busca todos os jogos
+            if (!window.allGames) {
+              window.allGames = await FirebaseService.getAllGames();
+            }
+            
+            // Encontra o jogo pelo ID
+            const game = window.allGames.find(g => g.id === gameId);
+            
+            if (game) {
+              // Verifica se o usuário não é o proprietário do jogo
+              if (currentUser.uid === game.userId) {
+                ToastManager.info('Você não pode avaliar seu próprio jogo.');
+                return;
+              }
+              
+              // Atualiza o título do modal
+              ratingModalTitle.textContent = `Avaliar: ${game.name}`;
+              
+              // Limpa o container
+              ratingCriteriaContainer.innerHTML = '';
+              
+              // Define o jogo atual para avaliação
+              currentGameForRating = game;
+              
+              // Cria e adiciona o formulário de avaliação
+              const criteriaForm = createCriteriaRating(game.id, game.criteriaRatings);
+              ratingCriteriaContainer.appendChild(criteriaForm);
+              
+              // Exibe o modal
+              ratingModal.show();
+            } else {
+              ToastManager.error('Jogo não encontrado. Tente recarregar a página.');
+            }
+          } catch (error) {
+            console.error('Erro ao buscar jogo para avaliação:', error);
+            ToastManager.error('Erro ao buscar jogo. Tente novamente mais tarde.');
+          }
+        };
+        
+        loadGameForRating();
       }
     });
   </script>
