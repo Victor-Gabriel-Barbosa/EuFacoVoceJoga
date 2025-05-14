@@ -1,10 +1,12 @@
 // Componente Navbar para o site Eu Faço Você Joga
+import FirebaseService from '../js/firebase-service.js';
 
 class Navbar {
   constructor() {
     this.navbarElement = document.createElement('nav');
     this.init();
     this.setupResponsiveBehavior();
+    this.setupAuthListeners();
   }
 
   init() {
@@ -35,6 +37,25 @@ class Navbar {
               <a class="nav-link rounded-pill px-3" href="jogos.html">
                 <i class="fas fa-list me-1"></i> Ver Jogos
               </a>
+            </li>
+            <li class="nav-item mx-md-1 auth-section">
+              <!-- Conteúdo de autenticação será inserido aqui dinamicamente -->
+              <button class="btn btn-primary rounded-pill login-btn">
+                <i class="fab fa-google me-1"></i> Entrar com Google
+              </button>
+              <div class="user-profile d-none">
+                <div class="dropdown">
+                  <button class="btn dropdown-toggle profile-button" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                    <img src="" alt="Foto de perfil" class="profile-pic rounded-circle me-1" width="24" height="24">
+                    <span class="user-name"></span>
+                  </button>
+                  <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                    <li><a class="dropdown-item user-email" href="#"><i class="fas fa-envelope me-1"></i> <span></span></a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item logout-btn" href="#"><i class="fas fa-sign-out-alt me-1"></i> Sair</a></li>
+                  </ul>
+                </div>
+              </div>
             </li>
           </ul>
         </div>
@@ -123,10 +144,69 @@ class Navbar {
       }
     });
   }
-
   // Método para obter o elemento navbar
   getElement() {
     return this.navbarElement;
+  }
+
+  // Configurar ouvintes para autenticação
+  setupAuthListeners() {
+    document.addEventListener('DOMContentLoaded', () => {
+      const loginBtn = this.navbarElement.querySelector('.login-btn');
+      const logoutBtn = this.navbarElement.querySelector('.logout-btn');
+      const userProfile = this.navbarElement.querySelector('.user-profile');
+      
+      // Monitorar estado de autenticação
+      FirebaseService.onAuthStateChanged((user) => {
+        if (user) {
+          // Usuário está logado
+          loginBtn.classList.add('d-none');
+          userProfile.classList.remove('d-none');
+          
+          // Atualizar informações do usuário
+          const profilePic = this.navbarElement.querySelector('.profile-pic');
+          const userName = this.navbarElement.querySelector('.user-name');
+          const userEmail = this.navbarElement.querySelector('.user-email span');
+          
+          profilePic.src = user.photoURL || 'src/images/avatar-placeholder.jpg';
+          userName.textContent = user.displayName || 'Usuário';
+          userEmail.textContent = user.email || '';
+          
+          // Disparar evento de login bem-sucedido
+          const event = new CustomEvent('user-logged-in', { detail: user });
+          document.dispatchEvent(event);
+        } else {
+          // Usuário não está logado
+          loginBtn.classList.remove('d-none');
+          userProfile.classList.add('d-none');
+          
+          // Disparar evento de logout
+          const event = new CustomEvent('user-logged-out');
+          document.dispatchEvent(event);
+        }
+      });
+      
+      // Evento de clique no botão de login
+      loginBtn.addEventListener('click', async () => {
+        try {
+          await FirebaseService.loginWithGoogle();
+        } catch (error) {
+          console.error('Erro ao fazer login:', error);
+          alert('Não foi possível fazer login. Tente novamente mais tarde.');
+        }
+      });
+      
+      // Evento de clique no botão de logout
+      logoutBtn.addEventListener('click', async (e) => {
+        e.preventDefault();
+        try {
+          await FirebaseService.logout();
+        } catch (error) {
+          console.error('Erro ao fazer logout:', error);
+          alert('Não foi possível fazer logout. Tente novamente mais tarde.');
+        }
+      });
+    });
   }
 }
 

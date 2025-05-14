@@ -210,6 +210,24 @@
       return urlParams.get('id');
     }
     
+    // Verifica se o usuário atual é o criador do jogo para mostrar/esconder botões de edição e exclusão
+    function checkUserPermissions(game) {
+      const editBtn = document.getElementById('edit-btn');
+      const deleteBtn = document.getElementById('delete-btn');
+      
+      // Esconde os botões por padrão
+      editBtn.classList.add('d-none');
+      deleteBtn.classList.add('d-none');
+      
+      const currentUser = FirebaseService.getCurrentUser();
+      
+      // Se o usuário estiver logado e for o criador do jogo, mostra os botões
+      if (currentUser && game.userId === currentUser.uid) {
+        editBtn.classList.remove('d-none');
+        deleteBtn.classList.remove('d-none');
+      }
+    }
+    
     // Carrega os detalhes do jogo
     async function loadGameDetails() {
       // Obtém o ID do jogo da URL
@@ -243,13 +261,15 @@
             </div>
           `;
           return;
-        }
-        
+        }        
         // Atualiza o título da página
         document.title = `${currentGame.name} - Eu Faço Você Joga!`;
         
         // Exibe os detalhes do jogo
         displayGameDetails();
+        
+        // Verifica permissões do usuário para edição/exclusão
+        checkUserPermissions(currentGame);
       } catch (error) {
         console.error('Erro ao carregar detalhes do jogo:', error);
         ToastManager.error('Erro ao carregar detalhes do jogo. Tente novamente mais tarde.');
@@ -411,12 +431,53 @@
           criteriaRatingsDisplay.appendChild(criteriaDisplay);
         }
       }
-      
-      // Adiciona o formulário de avaliação por critérios
+        // Adiciona o formulário de avaliação por critérios
       const criteriaRatingForm = document.getElementById('criteria-rating-form');
       if (criteriaRatingForm) {
-        const criteriaForm = createCriteriaRating(game.id, game.criteriaRatings);
-        criteriaRatingForm.appendChild(criteriaForm);
+        // Verifica se o usuário está logado
+        const currentUser = FirebaseService.getCurrentUser();
+        
+        if (currentUser) {
+          // Verifica se o usuário não é o proprietário do jogo (não pode avaliar o próprio jogo)
+          if (currentUser.uid === game.userId) {
+            criteriaRatingForm.innerHTML = `
+              <div class="alert alert-info">
+                <i class="fas fa-info-circle me-2"></i>Você não pode avaliar seu próprio jogo.
+              </div>
+            `;
+          } else {
+            const criteriaForm = createCriteriaRating(game.id, game.criteriaRatings);
+            criteriaRatingForm.appendChild(criteriaForm);
+          }
+        } else {
+          // Usuário não está logado, mostra mensagem para fazer login
+          criteriaRatingForm.innerHTML = `
+            <div class="alert alert-warning">
+              <i class="fas fa-exclamation-triangle me-2"></i>
+              <strong>Atenção!</strong> Você precisa estar logado para avaliar este jogo.
+              <button id="rating-login-button" class="btn btn-primary btn-sm ms-3">
+                <i class="fab fa-google me-1"></i> Entrar com Google
+              </button>
+            </div>
+          `;
+          
+          // Adiciona evento de clique ao botão de login
+          setTimeout(() => {
+            const ratingLoginButton = document.getElementById('rating-login-button');
+            if (ratingLoginButton) {
+              ratingLoginButton.addEventListener('click', async () => {
+                try {
+                  await FirebaseService.loginWithGoogle();
+                  // Após login bem-sucedido, recarrega a página
+                  loadGameDetails();
+                } catch (error) {
+                  console.error('Erro ao fazer login:', error);
+                  ToastManager.error('Não foi possível fazer login. Tente novamente mais tarde.');
+                }
+              });
+            }
+          }, 100);
+        }
       }
       
       // Adiciona os eventos para os botões de edição e exclusão
@@ -430,6 +491,9 @@
       if (deleteBtn) {
         deleteBtn.addEventListener('click', openDeleteModal);
       }
+      
+      // Verifica permissões do usuário
+      checkUserPermissions(game);
     }
     
     // Abre o modal de edição

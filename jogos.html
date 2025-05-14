@@ -433,16 +433,28 @@
         ToastManager.error('Erro ao registrar avaliação. Tente novamente.');
       }
     });
-    
-    // Evento de clique nos botões de avaliação
+      // Evento de clique nos botões de avaliação
     document.addEventListener('click', function(e) {
       if (e.target.closest('.rate-game-btn')) {
         const btn = e.target.closest('.rate-game-btn');
         const gameId = btn.dataset.gameId;
         
+        // Verifica se o usuário está logado
+        const currentUser = FirebaseService.getCurrentUser();
+        if (!currentUser) {
+          ToastManager.warning('Você precisa estar logado para avaliar este jogo.');
+          return;
+        }
+        
         // Encontra o jogo para avaliação
         const game = allGames.find(g => g.id === gameId);
         if (game) {
+          // Verifica se o usuário não é o proprietário do jogo
+          if (currentUser.uid === game.userId) {
+            ToastManager.info('Você não pode avaliar seu próprio jogo.');
+            return;
+          }
+          
           // Atualiza o título do modal
           ratingModalTitle.textContent = `Avaliar: ${game.name}`;
           

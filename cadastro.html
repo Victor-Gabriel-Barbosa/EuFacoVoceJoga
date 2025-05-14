@@ -34,13 +34,21 @@
       <p class="lead">Inscreva seu jogo indie na competição "Eu Faço Você Joga!"</p>
     </div>
   </section>
-  
-  <!-- Formulário de cadastro -->
+    <!-- Formulário de cadastro -->
   <section class="py-5">
     <div class="container">
       <div class="row justify-content-center">
         <div class="col-lg-8">
-          <div class="card shadow-sm">
+          <!-- Alerta para usuários não logados -->
+          <div id="login-required-alert" class="alert alert-warning mb-4 d-none">
+            <i class="fas fa-exclamation-triangle me-2"></i>
+            <strong>Atenção!</strong> Você precisa estar logado para cadastrar um jogo.
+            <button id="login-button" class="btn btn-primary btn-sm ms-3">
+              <i class="fab fa-google me-1"></i> Entrar com Google
+            </button>
+          </div>
+          
+          <div id="game-form-container" class="card shadow-sm d-none">
             <div class="card-body p-4">
               <h2 class="card-title h4 mb-4">Informações do Jogo</h2>
               
@@ -258,13 +266,45 @@
     const gameImage = document.getElementById('game-image');
     const submitBtn = document.getElementById('submit-btn');
     const formFeedback = document.getElementById('form-feedback');
-      // Elementos de preview
+    const gameFormContainer = document.getElementById('game-form-container');
+    const loginRequiredAlert = document.getElementById('login-required-alert');
+    const loginButton = document.getElementById('login-button');
+    
+    // Elementos de preview
     const previewContainer = document.getElementById('game-preview-container');
     const previewImage = document.getElementById('preview-image');
     const previewName = document.getElementById('preview-name');
     const previewDeveloper = document.getElementById('preview-developer');
     const previewDescription = document.getElementById('preview-description');
     const previewUrlBtn = document.getElementById('preview-url-btn');
+    
+    // Verifica o estado de login quando a página carrega
+    document.addEventListener('DOMContentLoaded', checkLoginState);
+    
+    // Verificar se o usuário está logado
+    function checkLoginState() {
+      FirebaseService.onAuthStateChanged((user) => {
+        if (user) {
+          // Usuário está logado, mostra o formulário
+          loginRequiredAlert.classList.add('d-none');
+          gameFormContainer.classList.remove('d-none');
+        } else {
+          // Usuário não está logado, mostra alerta
+          loginRequiredAlert.classList.remove('d-none');
+          gameFormContainer.classList.add('d-none');
+        }
+      });
+    }
+    
+    // Botão de login
+    loginButton.addEventListener('click', async () => {
+      try {
+        await FirebaseService.loginWithGoogle();
+      } catch (error) {
+        console.error('Erro ao fazer login:', error);
+        ToastManager.error('Não foi possível fazer login. Tente novamente mais tarde.');
+      }
+    });
     
     // Função para atualizar o preview com os dados do formulário
     function updatePreview() {

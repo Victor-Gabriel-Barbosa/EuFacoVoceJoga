@@ -57,3 +57,60 @@
   background-color: var(--primary-color);
   color: white !important;
 }
+
+/* Estilos para autenticação */
+.auth-section {
+  display: flex;
+  align-items: center;
+}
+
+.login-btn {
+  transition: all 0.3s ease;
+}
+
+.login-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.user-profile {
+  display: flex;
+  align-items: center;
+}
+
+.profile-button {
+  display: flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  color: white;
+  padding: 6px 12px;
+  border-radius: 50px;
+  transition: all 0.3s ease;
+}
+
+.profile-button:hover,
+.profile-button:focus {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+}
+
+.profile-pic {
+  object-fit: cover;
+  border: 2px solid white;
+}
+
+.dropdown-menu {
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  margin-top: 10px;
+  border: none;
+}
+
+.logout-btn {
+  color: #dc3545;
+}
+
+.logout-btn:hover {
+  background-color: rgba(220, 53, 69, 0.1);
+}
