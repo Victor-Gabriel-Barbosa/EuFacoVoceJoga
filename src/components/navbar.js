@@ -45,11 +45,11 @@ class Navbar {
     const style = document.createElement('style');
     style.textContent = `
       body {
-        padding-top: 56px; /* Altura da navbar */
+        padding-top: 46px; /* Reduzido: altura da navbar */
       }
       @media (min-width: 992px) {
         body {
-          padding-top: 60px;
+          padding-top: 50px; /* Reduzido para telas maiores */
         }
       }
     `;

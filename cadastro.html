@@ -105,8 +105,7 @@
                     </div>
                   </div>
                 </div>
-                
-                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                  <div class="d-grid gap-2 d-md-flex justify-content-md-end">
                   <button type="button" class="btn btn-outline-secondary" onclick="window.location.href='index.html'">
                     <i class="fas fa-arrow-left me-1"></i>Cancelar
                   </button>
@@ -119,6 +118,40 @@
                   <!-- Feedback será adicionado dinamicamente -->
                 </div>
               </form>
+            </div>
+          </div>
+            <!-- Preview do Jogo -->
+          <div class="card shadow-sm mt-4" id="game-preview-container">
+            <div class="card-body p-4">
+              <h2 class="card-title h4 mb-4">Preview do Jogo</h2>
+              <p class="text-muted small mb-4">Esta é uma visualização em tempo real de como seu jogo aparecerá na plataforma:</p>
+              
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="card game-card">
+                    <img src="src/images/game-placeholder.jpg" class="game-cover card-img-top" id="preview-image" alt="Capa do Jogo">
+                    <div class="card-body">
+                      <h5 class="card-title" id="preview-name">Nome do Jogo</h5>
+                      <h6 class="card-subtitle mb-2 text-muted" id="preview-developer">Desenvolvedor</h6>
+                      <div class="mb-2" id="preview-rating-container">
+                        <!-- Estrelas de avaliação -->
+                        <div class="rating-stars">
+                          <i class="far fa-star me-1"></i>
+                          <i class="far fa-star me-1"></i>
+                          <i class="far fa-star me-1"></i>
+                          <i class="far fa-star me-1"></i>
+                          <i class="far fa-star me-1"></i>
+                        </div>
+                        <span class="ms-2 text-muted small">(Sem avaliações)</span>
+                      </div>
+                      <p class="card-text" id="preview-description">Descrição do jogo aparecerá aqui.</p>
+                      <a href="#" class="btn btn-primary btn-sm" id="preview-url-btn" target="_blank">
+                        <i class="fas fa-gamepad me-1"></i>Jogar
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -225,6 +258,63 @@
     const gameImage = document.getElementById('game-image');
     const submitBtn = document.getElementById('submit-btn');
     const formFeedback = document.getElementById('form-feedback');
+      // Elementos de preview
+    const previewContainer = document.getElementById('game-preview-container');
+    const previewImage = document.getElementById('preview-image');
+    const previewName = document.getElementById('preview-name');
+    const previewDeveloper = document.getElementById('preview-developer');
+    const previewDescription = document.getElementById('preview-description');
+    const previewUrlBtn = document.getElementById('preview-url-btn');
+    
+    // Função para atualizar o preview com os dados do formulário
+    function updatePreview() {
+      // Atualiza o preview com os dados do formulário, mesmo que incompletos
+      previewName.textContent = gameName.value.trim() || 'Nome do Jogo';
+      previewDeveloper.textContent = gameDeveloper.value.trim() || 'Desenvolvedor';
+      previewDescription.textContent = gameDescription.value.trim() || 'Descrição do jogo aparecerá aqui.';
+      
+      // Atualiza o link do jogo
+      if (gameUrl.value.trim()) {
+        previewUrlBtn.href = gameUrl.value.trim();
+        previewUrlBtn.classList.remove('disabled');
+      } else {
+        previewUrlBtn.href = '#';
+        previewUrlBtn.classList.add('disabled');
+      }
+      
+      // Atualiza a imagem de capa
+      if (gameImage.files && gameImage.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          previewImage.src = e.target.result;
+        };
+        reader.readAsDataURL(gameImage.files[0]);
+      }
+      
+      // Adiciona uma leve animação para destacar as mudanças
+      previewContainer.classList.add('preview-update');
+      setTimeout(() => {
+        previewContainer.classList.remove('preview-update');
+      }, 500);
+    }
+    
+    // Inicializa o preview com os dados padrão
+    window.addEventListener('DOMContentLoaded', () => {
+      updatePreview();
+    });
+    
+    // Atualiza o preview quando o usuário selecionar uma imagem
+    gameImage.addEventListener('change', updatePreview);
+    
+    // Atualiza o preview quando o usuário modificar qualquer campo
+    [gameName, gameDeveloper, gameDescription, gameUrl].forEach(field => {
+      field.addEventListener('input', function() {
+        clearTimeout(field.debounceTimer);
+        field.debounceTimer = setTimeout(() => {
+          updatePreview();
+        }, 300); // Pequeno delay para evitar muitas atualizações durante digitação rápida
+      });
+    });
     
     // Manipula o envio do formulário
     gameForm.addEventListener('submit', async (e) => {

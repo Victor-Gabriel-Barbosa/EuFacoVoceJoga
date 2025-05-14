@@ -74,9 +74,8 @@
                     <i class="fas fa-users"></i>
                   </div>
                 </div>
-                <div class="flex-grow-1 ms-3">
-                  <h4 class="h5">Receba avaliações</h4>
-                  <p class="text-muted">A comunidade joga e avalia seu jogo com notas de 1 a 5 estrelas.</p>
+                <div class="flex-grow-1 ms-3">                  <h4 class="h5">Receba avaliações</h4>
+                  <p class="text-muted">A comunidade joga e avalia seu jogo com base em diversos critérios, como jogabilidade, design e história.</p>
                 </div>
               </div>
               <div class="d-flex mb-3">
@@ -117,6 +116,23 @@
       </div>
     </div>
   </section>
+  
+  <!-- Modal de Avaliação por Critérios -->
+  <div class="modal fade" id="ratingModal" tabindex="-1" aria-labelledby="ratingModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="ratingModalLabel">Avaliar Jogo</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div id="rating-criteria-container">
+            <!-- O formulário de avaliação por critérios será inserido aqui -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
   
   <!-- Footer -->
   <footer>
@@ -159,26 +175,30 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   
   <!-- Firebase SDK -->
-  <script type="module">
-    import { app } from './src/js/firebase-config.js';
+  <script type="module">    import { app } from './src/js/firebase-config.js';
     import Navbar from './src/components/navbar.js';
     import FirebaseService from './src/js/firebase-service.js';
     import ToastManager from './src/js/toast-manager.js';
-    import { formatDate, createRatingStars, truncateText, showLoader, hideLoader } from './src/js/utils.js';
+    import { formatDate, truncateText, showLoader, hideLoader } from './src/js/utils.js';
+    import { createCriteriaRating, displayCriteriaRatings, GAME_CRITERIA } from './src/js/criteria-rating.js';
     
     // Inicializa a navbar
     const navbar = new Navbar();
     document.getElementById('navbar-container').appendChild(navbar.getElement());
     navbar.setActive('index.html');
-    
-    // Carrega o ranking dos jogos
+      // Carrega o ranking dos jogos
     async function loadTopGames() {
-      const gamesContainer = document.getElementById('games-ranking');
+      const gamesContainer = document.getElementById('games-ranking');      const ratingModal = new bootstrap.Modal(document.getElementById('ratingModal'));
+      const ratingCriteriaContainer = document.getElementById('rating-criteria-container');
+      const ratingModalTitle = document.getElementById('ratingModalLabel');
+      let currentGameForRating = null;
+      let games = []; // Armazena todos os jogos para uso posterior
+      
       showLoader(gamesContainer);
       
       try {
         // Busca os jogos ordenados por avaliação
-        const games = await FirebaseService.getAllGames();
+        games = await FirebaseService.getAllGames();
         
         // Limpa o container
         gamesContainer.innerHTML = '';
@@ -229,9 +249,19 @@
               <div class="card-body">
                 <h5 class="card-title">${game.name}</h5>
                 <h6 class="card-subtitle mb-2 text-muted">${game.developer}</h6>
-                <p class="card-text">${truncateText(game.description, 100)}</p>
-                <div class="mb-3">
-                  ${createRatingStars(game.averageRating, game.ratingCount, game.id).outerHTML}
+                <p class="card-text">${truncateText(game.description, 100)}</p>                <div class="mb-3">
+                  <div class="d-flex justify-content-between align-items-center">
+                    <div class="rating-display">
+                      <span class="badge badge-rating">
+                        <i class="fas fa-star me-1"></i>${game.averageRating.toFixed(1)}
+                      </span>
+                      <small class="text-muted ms-2">(${game.ratingCount} avaliação${game.ratingCount !== 1 ? 'ões' : ''})</small>
+                    </div>
+                    <button class="btn btn-sm btn-outline-primary rate-game-btn" data-game-id="${game.id}">
+                      <i class="fas fa-star me-1"></i>Avaliar
+                    </button>
+                  </div>
+                  ${game.criteriaRatings ? displayCriteriaRatings(game.criteriaRatings).outerHTML : ''}
                 </div>
                 <a href="detalhes.html?id=${game.id}" class="btn btn-sm btn-primary">
                   <i class="fas fa-info-circle me-1"></i>Ver Detalhes
@@ -261,9 +291,59 @@
         `;
       }
     }
-    
-    // Carrega os jogos quando a página for carregada
+      // Carrega os jogos quando a página for carregada
     document.addEventListener('DOMContentLoaded', loadTopGames);
+    
+    // Manipula eventos de avaliação de jogos
+    document.addEventListener('rate-game-criteria', async (e) => {
+      const { gameId, ratings, averageRating } = e.detail;
+      
+      try {
+        // Envia a avaliação por critérios para o servidor
+        const result = await FirebaseService.rateCriteriaGame(gameId, ratings);
+        
+        // Atualiza a classificação do jogo na lista local e recarrega a página
+        ToastManager.success('Obrigado pela sua avaliação detalhada!');
+        
+        // Fecha o modal após 1.5 segundos para o usuário ver a mensagem de agradecimento
+        setTimeout(() => {
+          ratingModal.hide();
+          
+          // Recarrega a página para mostrar as novas avaliações
+          loadTopGames();
+        }, 1500);
+      } catch (error) {
+        console.error('Erro ao avaliar jogo por critérios:', error);
+        ToastManager.error('Erro ao registrar avaliação. Tente novamente.');
+      }
+    });
+    
+    // Evento de clique nos botões de avaliação
+    document.addEventListener('click', function(e) {
+      if (e.target.closest('.rate-game-btn')) {
+        const btn = e.target.closest('.rate-game-btn');
+        const gameId = btn.dataset.gameId;
+        
+        // Encontra o jogo para avaliação
+        const game = games.find(g => g.id === gameId);
+        if (game) {
+          // Atualiza o título do modal
+          ratingModalTitle.textContent = `Avaliar: ${game.name}`;
+          
+          // Limpa o container
+          ratingCriteriaContainer.innerHTML = '';
+            // Define o jogo atual para avaliação
+          currentGameForRating = game;
+          
+          // Cria e adiciona o formulário de avaliação
+          const criteriaForm = createCriteriaRating(game.id, game.criteriaRatings);
+          ratingCriteriaContainer.appendChild(criteriaForm);
+          
+          // Exibe o modal
+          ratingModal.show();
+        }
+      }
+    });
   </script>
 </body>
 </html>

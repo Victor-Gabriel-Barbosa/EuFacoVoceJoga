@@ -113,7 +113,7 @@ export function createCriteriaRating(gameId, currentRatings = {}) {
     const midMarker = document.createElement('small');
     midMarker.className = 'position-absolute text-muted';
     midMarker.style.left = '45%';
-    midMarker.style.bottom = '0';
+    midMarker.style.bottom = '-20px';
     midMarker.style.fontSize = '10px';
     midMarker.textContent = '5';
     
