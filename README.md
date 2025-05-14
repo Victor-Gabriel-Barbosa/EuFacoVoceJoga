@@ -61,7 +61,8 @@ Este é um site completo para a competição de desenvolvimento de jogos indie "
 │   ├── components/          # Componentes reutilizáveis
 │   │   └── navbar.js        # Componente de navegação
 │   ├── css/
-│   │   └── styles.css       # Estilos personalizados
+│   │   ├── navbar.css       # Estilos relacionados à navbar
+│   │   └── styles.css       # Estilos gerais personalizados
 │   ├── images/              # Imagens e recursos visuais
 │   │   ├── game-placeholder.jpg
 │   │   └── favicon/         # Ícones do site
@@ -118,9 +119,9 @@ index.html                  # Página principal
 README.md                   # Documentação
 src/
   components/               # Componentes JavaScript
-    navbar.js               # Funcionalidades da barra de navegação
-  css/
-    styles.css              # Estilos personalizados
+    navbar.js               # Funcionalidades da barra de navegação  css/
+    navbar.css               # Estilos da barra de navegação
+    styles.css               # Estilos gerais personalizados
   images/
     game-placeholder.jpg    # Imagens utilizadas no site
   js/
