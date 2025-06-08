@@ -32,8 +32,8 @@ class Footer {  constructor() {
             <div class="footer-links">
               <h5>Navegação</h5>
               <a href="index.html" class="footer-link">🏠 Início</a>
-              <a href="jogos.html" class="footer-link">🎮 Jogos</a>
-              <a href="cadastro.html" class="footer-link">📝 Cadastro</a>
+              <a href="games.html" class="footer-link">🎮 Jogos</a>
+              <a href="register.html" class="footer-link">📝 Cadastro</a>
               <a href="#sobre" class="footer-link">ℹ️ Sobre</a>
             </div>
           </div>

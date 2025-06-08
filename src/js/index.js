@@ -98,7 +98,7 @@ async function loadTopGames() {
               </div>
               <div class="criteria-ratings-container"></div>
             </div>
-            <a href="detalhes.html?id=${game.id}" class="btn btn-sm btn-primary">
+            <a href="details.html?id=${game.id}" class="btn btn-sm btn-primary">
               <i class="fas fa-info-circle me-1"></i>Ver Detalhes
             </a>
             <a href="${game.gameUrl}" target="_blank" class="btn btn-sm btn-outline-primary ms-1">

@@ -30,12 +30,12 @@ class Navbar {
               </a>
             </li>
             <li class="nav-item mx-md-1">
-              <a class="nav-link rounded-pill px-3" href="cadastro.html">
+              <a class="nav-link rounded-pill px-3" href="register.html">
                 <i class="bi bi-dpad me-1"></i> Cadastrar Jogo
               </a>
             </li>
             <li class="nav-item mx-md-1">
-              <a class="nav-link rounded-pill px-3" href="jogos.html">
+              <a class="nav-link rounded-pill px-3" href="games.html">
                 <i class="bi bi-controller me-1"></i> Ver Jogos
               </a>
             </li>            
