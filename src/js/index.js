@@ -1,5 +1,6 @@
 import { app } from './firebase-config.js';
 import Navbar from '../components/navbar.js';
+import Footer from '../components/footer.js';
 import FirebaseService from './firebase-service.js';
 import ToastManager from './toast-manager.js';
 import { formatDate, truncateText, showLoader, hideLoader } from './utils.js';
@@ -16,6 +17,12 @@ function initializeNavbar() {
   const navbar = new Navbar();
   document.getElementById('navbar-container').appendChild(navbar.getElement());
   navbar.setActive('index.html');
+}
+
+// Inicializa o footer
+function initializeFooter() {
+  const footer = new Footer();
+  document.getElementById('footer-container').appendChild(footer.getElement());
 }
 
 // Carrega o ranking dos jogos
@@ -239,6 +246,7 @@ function initializeEventListeners() {
 // Inicializa a aplicação
 function init() {
   initializeNavbar();
+  initializeFooter();
   initializeEventListeners();
 }
 

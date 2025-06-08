@@ -12,7 +12,8 @@ class Navbar {
   init() {
     this.navbarElement.className = 'navbar navbar-expand-lg navbar-dark bg-dark fixed-top';
     this.navbarElement.innerHTML = `
-      <div class="container">        <a class="navbar-brand d-flex align-items-center" href="index.html">
+      <div class="container">        
+        <a class="navbar-brand d-flex align-items-center" href="index.html">
           <i class="fas fa-gamepad me-2 text-primary"></i>
           <span class="d-inline d-md-none">EFVJ</span>
           <span class="d-none d-md-inline">Eu Faço Você Joga!</span>
@@ -37,10 +38,12 @@ class Navbar {
               <a class="nav-link rounded-pill px-3" href="jogos.html">
                 <i class="bi bi-controller me-1"></i> Ver Jogos
               </a>
-            </li>            <li class="nav-item mx-md-1 auth-section">
+            </li>            
+            <li class="nav-item mx-md-1 auth-section">
               <!-- Conteúdo de autenticação será inserido aqui dinamicamente -->
               <button class="btn btn-primary rounded-pill login-btn">
-                <i class="fab fa-google me-1"></i> Entrar com Google
+                <img src="https://img.icons8.com/?size=512&id=17949&format=png" class="me-1" width="24" height="24">
+               Entrar com Google
               </button>
               <div class="user-profile d-none">
                 <div class="dropdown">
@@ -252,7 +255,8 @@ class Navbar {
           console.error('Erro ao fazer logout:', error);
           alert('Não foi possível fazer logout. Tente novamente mais tarde.');
         }
-      });      // ===========================================
+      });      
+      // ===========================================
       // MODO DESENVOLVEDOR - REMOVER EM PRODUÇÃO
       // ===========================================
       const devModeSection = this.navbarElement.querySelector('.dev-mode-section');

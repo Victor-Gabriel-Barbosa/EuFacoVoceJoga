@@ -203,59 +203,28 @@
       </div>
     </div>
   </div>
-  
-  <!-- Footer -->
-  <footer>
-    <div class="container">
-      <div class="row">
-        <div class="col-md-6">
-          <h3 class="h5 mb-3">Eu Faço Você Joga!</h3>
-          <p>A maior competição de jogos indie do Brasil</p>
-          <p class="mb-0">&copy; 2025 - Todos os direitos reservados</p>
-        </div>
-        <div class="col-md-6 text-md-end mt-4 mt-md-0">
-          <ul class="list-inline mb-0">
-            <li class="list-inline-item">
-              <a href="#" class="text-white text-decoration-none">
-                <i class="fab fa-twitter fa-lg"></i>
-              </a>
-            </li>
-            <li class="list-inline-item ms-3">
-              <a href="#" class="text-white text-decoration-none">
-                <i class="fab fa-facebook fa-lg"></i>
-              </a>
-            </li>
-            <li class="list-inline-item ms-3">
-              <a href="#" class="text-white text-decoration-none">
-                <i class="fab fa-instagram fa-lg"></i>
-              </a>
-            </li>
-            <li class="list-inline-item ms-3">
-              <a href="#" class="text-white text-decoration-none">
-                <i class="fab fa-discord fa-lg"></i>
-              </a>
-            </li>
-          </ul>
-        </div>
-      </div>
-    </div>
-  </footer>
+    <!-- Footer será injetado via JavaScript -->
+  <div id="footer-container"></div>
 
   <!-- Bootstrap JS Bundle with Popper -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   
   <!-- Firebase SDK -->
-  <script type="module">
+  <script type="module">    
     import { app } from './src/js/firebase-config.js';
     import Navbar from './src/components/navbar.js';
+    import Footer from './src/components/footer.js';
     import FirebaseService from './src/js/firebase-service.js';
     import ToastManager from './src/js/toast-manager.js';
     import { validateForm } from './src/js/utils.js';
-    
-    // Inicializa a navbar
+      // Inicializa a navbar
     const navbar = new Navbar();
     document.getElementById('navbar-container').appendChild(navbar.getElement());
     navbar.setActive('cadastro.html');
+    
+    // Inicializa o footer
+    const footer = new Footer();
+    document.getElementById('footer-container').appendChild(footer.getElement());
     
     // Elementos do formulário
     const gameForm = document.getElementById('game-form');

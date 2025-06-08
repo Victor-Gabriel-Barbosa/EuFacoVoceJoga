@@ -17,13 +17,19 @@ body {
   color: var(--dark-color);
 }
 
+.bg-dark {
+  background-color: #0D1B2A !important;
+}
+
 .site-header {
   background: var(--primary-gradient);
   color: white;
-  padding: 6rem 0 5rem;
-  margin-bottom: 2rem;
+  height: 100vh;
   position: relative;
   overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .site-header::before {
@@ -52,7 +58,7 @@ body {
 
 /* Efeito de máscara de texto */
 .site-header h1 {
-  background: url("https://img.freepik.com/vetores-gratis/fundo-de-efeito-de-zoom-gradiente_23-2149737547.jpg?ga=GA1.1.1222038028.1749345401&semt=ais_hybrid&w=740");
+  background: url("https://img.freepik.com/fotos-premium/desenho-de-fundo-de-cor-liquida-composicao-de-gradiente-fluido_1028938-24639.jpg?ga=GA1.1.1222038028.1749345401&semt=ais_hybrid&w=740");
   background-size: 300px 300px, 800% 800%;
   background-position: 0 0, 0% 50%;
   background-clip: text;
@@ -63,6 +69,7 @@ body {
   filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.3));
   position: relative;
   text-shadow: none;
+  font-size: 100px;
 }
 
 /* Fallback para navegadores que não suportam background-clip: text */
