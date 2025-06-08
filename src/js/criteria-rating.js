@@ -201,10 +201,24 @@ export function displayCriteriaRatings(criteriaRatings) {
   const container = document.createElement('div');
   container.className = 'criteria-ratings-display mt-3';
   
+  // Cabeçalho com título e botão de toggle
+  const header = document.createElement('div');
+  header.className = 'd-flex align-items-center justify-content-between mb-2';
+  
   const title = document.createElement('h6');
-  title.className = 'mb-3';
+  title.className = 'mb-0';
   title.textContent = 'Avaliações por critério:';
-  container.appendChild(title);
+    const toggleBtn = document.createElement('button');
+  toggleBtn.className = 'btn btn-sm btn-outline-secondary criteria-toggle-btn';
+  toggleBtn.innerHTML = '<i class="fas fa-chevron-down"></i>';
+  toggleBtn.title = 'Mostrar detalhes';
+  
+  header.appendChild(title);
+  header.appendChild(toggleBtn);
+  container.appendChild(header);
+    // Container dos detalhes (inicialmente escondido)
+  const detailsContainer = document.createElement('div');
+  detailsContainer.className = 'criteria-details hidden';
   
   // Cria uma tabela para os critérios
   const table = document.createElement('div');
@@ -254,7 +268,28 @@ export function displayCriteriaRatings(criteriaRatings) {
   });
   
   table.appendChild(tableContent);
-  container.appendChild(table);
+  detailsContainer.appendChild(table);
+  container.appendChild(detailsContainer);  // Adiciona evento de toggle
+  toggleBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    const isHidden = detailsContainer.classList.contains('hidden');
+    
+    if (isHidden) {
+      // Mostra os detalhes
+      detailsContainer.classList.remove('hidden');
+      detailsContainer.classList.add('visible');
+      toggleBtn.innerHTML = '<i class="fas fa-chevron-up"></i>';
+      toggleBtn.title = 'Esconder detalhes';
+    } else {
+      // Esconde os detalhes
+      detailsContainer.classList.remove('visible');
+      detailsContainer.classList.add('hidden');
+      toggleBtn.innerHTML = '<i class="fas fa-chevron-down"></i>';
+      toggleBtn.title = 'Mostrar detalhes';
+    }
+  });
   
   return container;
 }

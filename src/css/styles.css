@@ -1,3 +1,5 @@
+@import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css");
+
 /* Estilos para o site Eu Faço Você Joga */
 
 :root {
@@ -184,6 +186,44 @@ footer {
 
 .criteria-ratings-display .progress-bar {
   background-color: var(--primary-color);
+}
+
+/* Estilos para o botão de toggle das avaliações detalhadas */
+.criteria-toggle-btn {
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  border: 1px solid rgba(108, 92, 231, 0.3);
+  color: var(--primary-color);
+}
+
+.criteria-toggle-btn:hover {
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
+  color: white;
+  transform: scale(1.1);
+}
+
+.criteria-toggle-btn:focus {
+  box-shadow: 0 0 0 0.2rem rgba(108, 92, 231, 0.25);
+}
+
+.criteria-details {
+  transition: all 0.3s ease;
+  overflow: hidden;
+}
+
+.criteria-details.hidden {
+  display: none;
+}
+
+.criteria-details.visible {
+  display: block;
 }
 
 /* Personalização dos sliders com marcadores */
