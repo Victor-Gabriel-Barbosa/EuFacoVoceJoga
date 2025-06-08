@@ -231,13 +231,6 @@ body {
   padding: 0.4rem 0.6rem;
 }
 
-footer {
-  background-color: var(--dark-color);
-  color: white;
-  padding: 2rem 0;
-  margin-top: 3rem;
-}
-
 /* Loader */
 .loader {
   width: 48px;
