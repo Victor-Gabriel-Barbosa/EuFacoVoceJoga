@@ -117,9 +117,7 @@ async function loadTopGames() {
         const criteriaRatingsElement = displayCriteriaRatings(game.criteriaRatings);
         if (criteriaRatingsElement) {
           const criteriaContainer = col.querySelector('.criteria-ratings-container');
-          if (criteriaContainer) {
-            criteriaContainer.appendChild(criteriaRatingsElement);
-          }
+          if (criteriaContainer) criteriaContainer.appendChild(criteriaRatingsElement);
         }
       }
     });
@@ -141,9 +139,7 @@ async function loadTopGames() {
 async function loadGameForRating(gameId) {
   try {
     // Se os jogos não foram carregados ainda, busca todos os jogos
-    if (!window.allGames) {
-      window.allGames = await FirebaseService.getAllGames();
-    }
+    if (!window.allGames) window.allGames = await FirebaseService.getAllGames();
     
     // Encontra o jogo pelo ID
     const game = window.allGames.find(g => g.id === gameId);
@@ -171,9 +167,7 @@ async function loadGameForRating(gameId) {
       
       // Exibe o modal
       ratingModal.show();
-    } else {
-      ToastManager.error('Jogo não encontrado. Tente recarregar a página.');
-    }
+    } else ToastManager.error('Jogo não encontrado. Tente recarregar a página.');
   } catch (error) {
     console.error('Erro ao buscar jogo para avaliação:', error);
     ToastManager.error('Erro ao buscar jogo. Tente novamente mais tarde.');

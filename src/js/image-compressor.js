@@ -98,15 +98,11 @@ class ImageCompressor {
     const { maxSizeKB = 750 } = options;
     
     // Verifica se o arquivo é uma imagem
-    if (!file.type.startsWith('image/')) {
-      return file;
-    }
+    if (!file.type.startsWith('image/')) return file;
     
     // Verifica se o arquivo já é menor que o limite
     const fileSizeKB = file.size / 1024;
-    if (fileSizeKB <= maxSizeKB) {
-      return file;
-    }
+    if (fileSizeKB <= maxSizeKB) return file;
     
     // Comprime a imagem
     return this.compressImage(file, options);

@@ -62,32 +62,22 @@ class ToastManager {
   // Retorna o ícone apropriado para o tipo de toast
   getIconForType(type) {
     switch (type) {
-      case 'success':
-        return 'fa-check-circle';
-      case 'error':
-        return 'fa-times-circle';
-      case 'warning':
-        return 'fa-exclamation-triangle';
-      case 'info':
-        return 'fa-info-circle';
-      default:
-        return 'fa-bell';
+      case 'success': return 'fa-check-circle';
+      case 'error': return 'fa-times-circle';
+      case 'warning': return 'fa-exclamation-triangle';
+      case 'info': return 'fa-info-circle';
+      default: return 'fa-bell';
     }
   }
 
   // Retorna o título apropriado para o tipo de toast
   getTitleForType(type) {
     switch (type) {
-      case 'success':
-        return 'Sucesso';
-      case 'error':
-        return 'Erro';
-      case 'warning':
-        return 'Atenção';
-      case 'info':
-        return 'Informação';
-      default:
-        return 'Notificação';
+      case 'success': return 'Sucesso';
+      case 'error': return 'Erro';
+      case 'warning': return 'Atenção';
+      case 'info': return 'Informação';
+      default: return 'Notificação';
     }
   }
 

@@ -1,4 +1,3 @@
-import { app } from './firebase-config.js';
 import Navbar from '../components/navbar.js';
 import Footer from '../components/footer.js';
 import FirebaseService from './firebase-service.js';
@@ -264,9 +263,7 @@ function displayGameDetails() {
   const criteriaRatingsDisplay = document.getElementById('criteria-ratings-display');
   if (criteriaRatingsDisplay && game.criteriaRatings) {
     const criteriaDisplay = displayCriteriaRatings(game.criteriaRatings);
-    if (criteriaDisplay) {
-      criteriaRatingsDisplay.appendChild(criteriaDisplay);
-    }
+    if (criteriaDisplay) criteriaRatingsDisplay.appendChild(criteriaDisplay);
   }
     
   // Adiciona o formulário de avaliação por critérios
@@ -322,13 +319,9 @@ function displayGameDetails() {
   const editBtn = document.getElementById('edit-btn');
   const deleteBtn = document.getElementById('delete-btn');
   
-  if (editBtn) {
-    editBtn.addEventListener('click', openEditModal);
-  }
+  if (editBtn) editBtn.addEventListener('click', openEditModal);
   
-  if (deleteBtn) {
-    deleteBtn.addEventListener('click', openDeleteModal);
-  }
+  if (deleteBtn) deleteBtn.addEventListener('click', openDeleteModal);
   
   // Verifica permissões do usuário
   checkUserPermissions(game);
@@ -390,9 +383,7 @@ async function saveGameChanges() {
     const imageFile = editGameImage.files[0];
     if (imageFile) {
       // Exibe uma mensagem de espera se a imagem for grande
-      if (imageFile.size > 500 * 1024) { // Mais de 500KB
-        ToastManager.info('A imagem é grande e pode levar alguns segundos para ser processada...');
-      }
+      if (imageFile.size > 500 * 1024) ToastManager.info('A imagem é grande e pode levar alguns segundos para ser processada...'); // Mais de 500KB
       await FirebaseService.uploadGameImage(imageFile, gameId);
     }
     
@@ -447,7 +438,7 @@ async function deleteGame() {
 
 // Manipula eventos de avaliação de jogos
 document.addEventListener('rate-game-criteria', async (e) => {
-  const { gameId, ratings, averageRating } = e.detail;
+  const { gameId, ratings } = e.detail;
   
   try {
     // Envia a avaliação por critérios para o servidor
@@ -475,11 +466,7 @@ document.addEventListener('rate-game-criteria', async (e) => {
 document.addEventListener('DOMContentLoaded', loadGameDetails);
 
 // Evento para salvar as alterações
-if (saveEditBtn) {
-  saveEditBtn.addEventListener('click', saveGameChanges);
-}
+if (saveEditBtn) saveEditBtn.addEventListener('click', saveGameChanges);
 
 // Evento para confirmar a exclusão
-if (confirmDeleteBtn) {
-  confirmDeleteBtn.addEventListener('click', deleteGame);
-}
+if (confirmDeleteBtn) confirmDeleteBtn.addEventListener('click', deleteGame);

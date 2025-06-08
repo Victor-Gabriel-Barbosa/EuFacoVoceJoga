@@ -2,9 +2,7 @@
 
 // Formata a data em formato legível
 export function formatDate(timestamp) {
-  if (!timestamp || !timestamp.toDate) {
-    return 'Data indisponível';
-  }
+  if (!timestamp || !timestamp.toDate) return 'Data indisponível';
   
   const date = timestamp.toDate();
   return new Intl.DateTimeFormat('pt-BR', {
@@ -68,10 +66,7 @@ export function createRatingStars(averageRating, ratingCount, gameId, isInteract
         document.dispatchEvent(rateEvent);
       });
     }
-  } else {
-    // Exibe estrelas estáticas
-    stars.innerHTML = generateFilledStars(averageRating);
-  }
+  } else stars.innerHTML = generateFilledStars(averageRating); // Exibe estrelas estáticas
   
   starsContainer.appendChild(stars);
   
@@ -89,9 +84,7 @@ export function createRatingStars(averageRating, ratingCount, gameId, isInteract
 // Gera código HTML para estrelas vazias interativas
 function generateEmptyStars() {
   let starsHtml = '';
-  for (let i = 1; i <= 5; i++) {
-    starsHtml += `<i class="far fa-star me-1" data-rating="${i}"></i>`;
-  }
+  for (let i = 1; i <= 5; i++) starsHtml += `<i class="far fa-star me-1" data-rating="${i}"></i>`;
   return starsHtml;
 }
 
@@ -102,13 +95,9 @@ function generateFilledStars(rating) {
   const halfStar = rating % 1 >= 0.5;
   
   for (let i = 1; i <= 5; i++) {
-    if (i <= fullStars) {
-      starsHtml += '<i class="fas fa-star me-1"></i>';
-    } else if (i === fullStars + 1 && halfStar) {
-      starsHtml += '<i class="fas fa-star-half-alt me-1"></i>';
-    } else {
-      starsHtml += '<i class="far fa-star me-1"></i>';
-    }
+    if (i <= fullStars) starsHtml += '<i class="fas fa-star me-1"></i>';
+    else if (i === fullStars + 1 && halfStar) starsHtml += '<i class="fas fa-star-half-alt me-1"></i>';
+    else starsHtml += '<i class="far fa-star me-1"></i>';
   }
   
   return starsHtml;
@@ -138,9 +127,7 @@ export function validateForm(formData, requiredFields) {
   const errors = [];
   
   for (const field of requiredFields) {
-    if (!formData[field] || formData[field].trim() === '') {
-      errors.push(`O campo ${field} é obrigatório.`);
-    }
+    if (!formData[field] || formData[field].trim() === '') errors.push(`O campo ${field} é obrigatório.`);
   }
   
   return errors;
@@ -158,7 +145,5 @@ export function showLoader(container) {
 // Remove loader
 export function hideLoader(container) {
   const loader = container.querySelector('.loading-container');
-  if (loader) {
-    loader.remove();
-  }
+  if (loader) loader.remove();
 }

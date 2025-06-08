@@ -1,4 +1,3 @@
-import { app } from './firebase-config.js';
 import Navbar from '../components/navbar.js';
 import Footer from '../components/footer.js';
 import FirebaseService from './firebase-service.js';

@@ -393,10 +393,7 @@ class FirebaseService {
             criteriaScores[key] = (criteriaScores[key] || 0) + value;
           });
           totalAverageRating += data.averageRating;
-        } else if (data.rating) {
-          // Se for avaliação simples (compatibilidade)
-          totalAverageRating += data.rating;
-        }
+        } else if (data.rating) totalAverageRating += data.rating; // Se for avaliação simples (compatibilidade)
         
         count++;
       });
@@ -463,9 +460,7 @@ class FirebaseService {
   // Obter usuário atual
   getCurrentUser() {
     // Modo desenvolvedor - retorna usuário simulado se estiver em modo de desenvolvimento
-    if (DEV_MODE) {
-      return currentMockUser;
-    }
+    if (DEV_MODE) return currentMockUser;
     
     return auth.currentUser;
   }
@@ -492,7 +487,7 @@ class FirebaseService {
   // ===========================================
   // MÉTODOS DE MODO DESENVOLVEDOR - REMOVER EM PRODUÇÃO
   // ===========================================
-    // Alternar entre modo desenvolvedor e modo produção
+  // Alternar entre modo desenvolvedor e modo produção
   toggleDevMode() {
     if (!DEV_MODE) return false; // Só permite alternar se DEV_MODE estiver true
     

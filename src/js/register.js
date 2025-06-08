@@ -1,9 +1,7 @@
-import { app } from './firebase-config.js';
 import Navbar from '../components/navbar.js';
 import Footer from '../components/footer.js';
 import FirebaseService from './firebase-service.js';
 import ToastManager from './toast-manager.js';
-import { validateForm } from './utils.js';
 
 // Inicializa a navbar
 const navbar = new Navbar();
@@ -144,9 +142,7 @@ gameForm.addEventListener('submit', async (e) => {
     const gameId = await FirebaseService.addGame(gameData);
     
     // Faz upload da imagem
-    if (imageFile) {
-      await FirebaseService.uploadGameImage(imageFile, gameId);
-    }
+    if (imageFile) await FirebaseService.uploadGameImage(imageFile, gameId);
     
     // Exibe mensagem de sucesso
     ToastManager.success('Jogo cadastrado com sucesso!');
