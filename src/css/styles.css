@@ -3,11 +3,12 @@
 /* Estilos para o site Eu Faço Você Joga */
 
 :root {
-  --primary-color: #6c5ce7;
-  --secondary-color: #a29bfe;
+  --primary-color: #9b30ff;
+  --secondary-color: #FFA500;
   --accent-color: #fd79a8;
   --light-color: #f5f6fa;
   --dark-color: #2d3436;
+  --primary-gradient: linear-gradient(135deg, #a100ff, #e040fb, #9c27b0);
 }
 
 body {
@@ -17,10 +18,95 @@ body {
 }
 
 .site-header {
-  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+  background: var(--primary-gradient);
   color: white;
   padding: 6rem 0 5rem;
   margin-bottom: 2rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.site-header::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(255, 255, 255, 0.05) 0%, transparent 50%),
+    linear-gradient(45deg, transparent 40%, rgba(255, 255, 255, 0.03) 50%, transparent 60%);
+  animation: headerAnimation 10s ease-in-out infinite;
+}
+
+@keyframes headerAnimation {
+  0%, 100% { opacity: 1; transform: translateX(0); }
+  50% { opacity: 0.8; transform: translateX(10px); }
+}
+
+.site-header .container {
+  position: relative;
+  z-index: 2;
+}
+
+/* Efeito de máscara de texto */
+.site-header h1 {
+  background: url("https://img.freepik.com/vetores-gratis/fundo-de-efeito-de-zoom-gradiente_23-2149737547.jpg?ga=GA1.1.1222038028.1749345401&semt=ais_hybrid&w=740");
+  background-size: 300px 300px, 800% 800%;
+  background-position: 0 0, 0% 50%;
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent; 
+  animation: gradientShift 6s ease-in-out infinite, patternMove 12s linear infinite;
+  filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.3));
+  position: relative;
+  text-shadow: none;
+}
+
+/* Fallback para navegadores que não suportam background-clip: text */
+@supports not (-webkit-background-clip: text) {
+  .site-header h1 {
+    background: linear-gradient(
+      45deg,
+      #ff6b6b,
+      #4ecdc4,
+      #45b7d1,
+      #96ceb4,
+      #ffeaa7,
+      #fd79a8
+    );
+    color: white;
+    -webkit-text-fill-color: white;
+  }
+}
+
+@keyframes gradientShift {
+  0%, 100% {
+    background-position: 0 0, 0% 50%;
+  }
+  25% {
+    background-position: 75px 25px, 25% 25%;
+  }
+  50% {
+    background-position: 150px 50px, 50% 50%;
+  }
+  75% {
+    background-position: 225px 75px, 75% 75%;
+  }
+}
+
+@keyframes patternMove {
+  0% {
+    background-position: 0 0, 0% 50%;
+  }
+  50% {
+    background-position: 300px 150px, 100% 100%;
+  }
+  100% {
+    background-position: 600px 300px, 0% 50%;
+  }
 }
 
 .game-card {
@@ -92,8 +178,38 @@ body {
 }
 
 .btn-primary:hover {
-  background-color: #5345e7;
-  border-color: #5345e7;
+  background-color: var(--secondary-color);
+  border-color: var(--secondary-color);
+}
+
+.btn-light {
+  background-color: var(--secondary-color);
+}
+
+.btn-light:hover {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.btn-outline-light {
+  color: white;
+}
+
+.btn-outline-light:hover {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.btn-outline-primary {
+  color: var(--primary-color);
+  border-color: var(--primary-color);
+  transition: all 0.3s ease;
+}
+
+.btn-outline-primary:hover {
+  border-color: var(--secondary-color);
+  background-color: var(--secondary-color);
+  color: white;
 }
 
 .form-control:focus {
@@ -329,8 +445,21 @@ footer {
     padding: 3rem 0;
   }
   
+  .site-header h1 {
+    font-size: 2.5rem !important;
+    background-size: 200px 200px, 600% 600%;
+    animation-duration: 8s, 15s;
+  }
+  
   .game-card {
     margin-bottom: 20px;
+  }
+}
+
+@media (max-width: 576px) {
+  .site-header h1 {
+    font-size: 2rem !important;
+    background-size: 150px 150px, 400% 400%;
   }
 }
 

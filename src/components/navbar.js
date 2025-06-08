@@ -12,10 +12,10 @@ class Navbar {
   init() {
     this.navbarElement.className = 'navbar navbar-expand-lg navbar-dark bg-dark fixed-top';
     this.navbarElement.innerHTML = `
-      <div class="container">
-        <a class="navbar-brand d-flex align-items-center" href="index.html">
+      <div class="container">        <a class="navbar-brand d-flex align-items-center" href="index.html">
           <i class="fas fa-gamepad me-2 text-primary"></i>
-          Eu Faço Você Joga!
+          <span class="d-inline d-md-none">EFVJ</span>
+          <span class="d-none d-md-inline">Eu Faço Você Joga!</span>
         </a>
         <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" 
           aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -37,8 +37,7 @@ class Navbar {
               <a class="nav-link rounded-pill px-3" href="jogos.html">
                 <i class="bi bi-controller me-1"></i> Ver Jogos
               </a>
-            </li>
-            <li class="nav-item mx-md-1 auth-section">
+            </li>            <li class="nav-item mx-md-1 auth-section">
               <!-- Conteúdo de autenticação será inserido aqui dinamicamente -->
               <button class="btn btn-primary rounded-pill login-btn">
                 <i class="fab fa-google me-1"></i> Entrar com Google
@@ -49,6 +48,23 @@ class Navbar {
                     <img src="" alt="Foto de perfil" class="profile-pic rounded-circle me-1" width="24" height="24">
                     <span class="user-name"></span>
                   </button>
+                  <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                    <li><a class="dropdown-item user-email" href="#"><i class="fas fa-envelope me-1"></i> <span></span></a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item logout-btn" href="#"><i class="fas fa-sign-out-alt me-1"></i> Sair</a></li>
+                  </ul>
+                </div>
+              </div>
+            </li>
+            <!-- ========================================= -->
+            <!-- BOTÃO MODO DESENVOLVEDOR - REMOVER EM PRODUÇÃO -->
+            <!-- ========================================= -->
+            <li class="nav-item dev-mode-section d-none">
+              <button class="btn btn-sm btn-outline-warning rounded-pill dev-toggle-btn" title="Modo Desenvolvedor">
+                <i class="fas fa-code"></i>
+              </button>
+            </li>
+            <!-- ========================================= -->
                   <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
                     <li><a class="dropdown-item user-email" href="#"><i class="fas fa-envelope me-1"></i> <span></span></a></li>
                     <li><hr class="dropdown-divider"></li>
@@ -73,6 +89,38 @@ class Navbar {
           padding-top: 50px; /* Reduzido para telas maiores */
         }
       }
+      /* ===========================================
+         ESTILOS MODO DESENVOLVEDOR - REMOVER EM PRODUÇÃO
+         =========================================== */
+      .dev-mode-indicator {
+        position: fixed;
+        top: 60px;
+        right: 10px;
+        background: linear-gradient(45deg, #ffc107, #fd7e14);
+        color: #000;
+        padding: 5px 10px;
+        border-radius: 15px;
+        font-size: 11px;
+        font-weight: bold;
+        z-index: 1050;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+        animation: pulse 2s infinite;
+      }
+      
+      @keyframes pulse {
+        0% { opacity: 1; }
+        50% { opacity: 0.7; }
+        100% { opacity: 1; }
+      }
+      
+      .dev-toggle-btn {
+        transition: all 0.3s ease;
+      }
+      
+      .dev-toggle-btn:hover {
+        transform: scale(1.1);
+      }
+      /* =========================================== */
     `;
     document.head.appendChild(style);
   }
@@ -195,8 +243,7 @@ class Navbar {
           alert('Não foi possível fazer login. Tente novamente mais tarde.');
         }
       });
-      
-      // Evento de clique no botão de logout
+        // Evento de clique no botão de logout
       logoutBtn.addEventListener('click', async (e) => {
         e.preventDefault();
         try {
@@ -205,7 +252,61 @@ class Navbar {
           console.error('Erro ao fazer logout:', error);
           alert('Não foi possível fazer logout. Tente novamente mais tarde.');
         }
-      });
+      });      // ===========================================
+      // MODO DESENVOLVEDOR - REMOVER EM PRODUÇÃO
+      // ===========================================
+      const devModeSection = this.navbarElement.querySelector('.dev-mode-section');
+      const devToggleBtn = this.navbarElement.querySelector('.dev-toggle-btn');
+      
+      // Função para criar/remover indicador visual
+      const toggleDevIndicator = (show) => {
+        const existingIndicator = document.getElementById('dev-mode-indicator');
+        if (existingIndicator) {
+          existingIndicator.remove();
+        }
+        
+        if (show) {
+          const indicator = document.createElement('div');
+          indicator.id = 'dev-mode-indicator';
+          indicator.className = 'dev-mode-indicator';
+          indicator.innerHTML = '🔧 MODO DEV';
+          document.body.appendChild(indicator);
+        }
+      };
+      
+      // Verifica se está em modo desenvolvedor e mostra o botão
+      if (FirebaseService.isDevMode && FirebaseService.isDevMode()) {
+        devModeSection.classList.remove('d-none');
+        devToggleBtn.classList.add('btn-warning');
+        devToggleBtn.classList.remove('btn-outline-warning');
+        devToggleBtn.innerHTML = '<i class="fas fa-code"></i> DEV';
+        toggleDevIndicator(true);
+      } else if (FirebaseService.isDevMode) {
+        devModeSection.classList.remove('d-none');
+        toggleDevIndicator(false);
+      }
+      
+      // Evento de clique no botão de modo desenvolvedor
+      if (devToggleBtn) {
+        devToggleBtn.addEventListener('click', () => {
+          if (FirebaseService.toggleDevMode && FirebaseService.toggleDevMode()) {
+            // Modo ativado
+            devToggleBtn.classList.add('btn-warning');
+            devToggleBtn.classList.remove('btn-outline-warning');
+            devToggleBtn.innerHTML = '<i class="fas fa-code"></i> DEV';
+            toggleDevIndicator(true);
+            console.log('Modo desenvolvedor ATIVADO');
+          } else if (FirebaseService.toggleDevMode) {
+            // Modo desativado
+            devToggleBtn.classList.remove('btn-warning');
+            devToggleBtn.classList.add('btn-outline-warning');
+            devToggleBtn.innerHTML = '<i class="fas fa-code"></i>';
+            toggleDevIndicator(false);
+            console.log('Modo desenvolvedor DESATIVADO');
+          }
+        });
+      }
+      // ===========================================
     });
   }
 }

@@ -41,6 +41,18 @@
   color: var(--primary-color) !important;
 }
 
+/* Responsividade do texto da navbar */
+.navbar-brand span {
+  transition: opacity 0.3s ease;
+}
+
+/* Ajuste para telas muito pequenas */
+@media (max-width: 576px) {
+  .navbar-brand {
+    font-size: 1.1rem;
+  }
+}
+
 .navbar .nav-link {
   position: relative;
   font-weight: 500;

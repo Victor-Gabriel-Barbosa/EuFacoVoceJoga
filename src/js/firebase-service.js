@@ -4,6 +4,51 @@ import { GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from
 import { app, auth } from './firebase-config.js';
 import ImageCompressor from './image-compressor.js';
 
+// ===========================================
+// MODO DESENVOLVEDOR - REMOVER EM PRODUÇÃO
+// ===========================================
+const DEV_MODE = true; // Altere para false em produção
+const MOCK_USER = {
+  uid: 'dev-user-123',
+  email: 'desenvolvedor@teste.com',
+  displayName: 'Desenvolvedor Teste',
+  photoURL: null
+};
+
+let currentMockUser = DEV_MODE ? MOCK_USER : null;
+let authStateCallbacks = [];
+
+// Função para mostrar feedback visual no modo desenvolvedor
+function showDevFeedback(message, type = 'info') {
+  if (!DEV_MODE) return;
+  
+  const colors = {
+    info: '#17a2b8',
+    success: '#28a745',
+    warning: '#ffc107',
+    error: '#dc3545'
+  };
+  
+  console.log(`%c[MODO DEV] ${message}`, `color: ${colors[type]}; font-weight: bold;`);
+  
+  // Criar toast visual se ToastManager estiver disponível
+  if (typeof window !== 'undefined' && window.ToastManager) {
+    window.ToastManager.info(`🔧 DEV: ${message}`);
+  }
+}
+
+// Mostrar aviso inicial se estiver em modo desenvolvedor
+if (DEV_MODE && typeof window !== 'undefined') {
+  console.log('%c🔧 MODO DESENVOLVEDOR ATIVO', 'color: #ffc107; font-size: 16px; font-weight: bold;');
+  console.log('%cUse os seguintes comandos:', 'color: #17a2b8;');
+  console.log('%c- FirebaseService.devLogin() - Fazer login simulado', 'color: #6c757d;');
+  console.log('%c- FirebaseService.devLogout() - Fazer logout simulado', 'color: #6c757d;');
+  console.log('%c- FirebaseService.toggleDevMode() - Alternar modo', 'color: #6c757d;');
+  console.log('%c- FirebaseService.isDevMode() - Verificar status', 'color: #6c757d;');
+  console.log('%cLembre-se de desativar antes da produção!', 'color: #dc3545; font-weight: bold;');
+}
+// ===========================================
+
 // Inicializa o Firestore
 const db = getFirestore(app);
 
@@ -417,13 +462,109 @@ class FirebaseService {
 
   // Obter usuário atual
   getCurrentUser() {
+    // Modo desenvolvedor - retorna usuário simulado se estiver em modo de desenvolvimento
+    if (DEV_MODE) {
+      return currentMockUser;
+    }
+    
     return auth.currentUser;
   }
 
   // Observar mudanças de estado de autenticação
   onAuthStateChanged(callback) {
+    // Modo desenvolvedor - chama o callback imediatamente com o usuário simulado se estiver em modo de desenvolvimento
+    if (DEV_MODE) {
+      authStateCallbacks.push(callback);
+      
+      // Simula mudança de estado de autenticação após 100ms
+      setTimeout(() => {
+        callback(currentMockUser);
+      }, 100);
+      
+      return () => {
+        // Remove o callback (não será chamado novamente em modo desenvolvedor)
+        authStateCallbacks = authStateCallbacks.filter(cb => cb !== callback);
+      };
+    }    
     return onAuthStateChanged(auth, callback);
   }
+
+  // ===========================================
+  // MÉTODOS DE MODO DESENVOLVEDOR - REMOVER EM PRODUÇÃO
+  // ===========================================
+    // Alternar entre modo desenvolvedor e modo produção
+  toggleDevMode() {
+    if (!DEV_MODE) return false; // Só permite alternar se DEV_MODE estiver true
+    
+    currentMockUser = currentMockUser ? null : MOCK_USER;
+    
+    // Notifica todos os callbacks sobre a mudança
+    authStateCallbacks.forEach(callback => {
+      setTimeout(() => callback(currentMockUser), 10);
+    });
+    
+    const isActive = currentMockUser !== null;
+    showDevFeedback(`Modo ${isActive ? 'ATIVADO' : 'DESATIVADO'}`, isActive ? 'success' : 'warning');
+    return isActive;
+  }
+  
+  // Verificar se está em modo desenvolvedor
+  isDevMode() {
+    return DEV_MODE && currentMockUser !== null;
+  }
+  
+  // Simular login em modo desenvolvedor
+  async devLogin() {
+    if (!DEV_MODE) return false;
+    
+    currentMockUser = MOCK_USER;
+    
+    // Notifica todos os callbacks
+    authStateCallbacks.forEach(callback => {
+      setTimeout(() => callback(currentMockUser), 10);
+    });
+    
+    showDevFeedback('Login simulado realizado', 'success');
+    return MOCK_USER;
+  }
+  
+  // Simular logout em modo desenvolvedor
+  async devLogout() {
+    if (!DEV_MODE) return false;
+    
+    currentMockUser = null;
+    
+    // Notifica todos os callbacks
+    authStateCallbacks.forEach(callback => {
+      setTimeout(() => callback(null), 10);
+    });
+    
+    showDevFeedback('Logout simulado realizado', 'warning');
+    return true;
+  }
+  
+  // ===========================================
 }
 
 export default new FirebaseService();
+
+// ===========================================
+// MODO DESENVOLVEDOR - REMOVER EM PRODUÇÃO  
+// ===========================================
+// Expõe o FirebaseService globalmente para facilitar uso no console
+if (DEV_MODE && typeof window !== 'undefined') {
+  window.FirebaseService = new FirebaseService();
+  
+  // Adiciona atalhos úteis
+  window.devLogin = () => window.FirebaseService.devLogin();
+  window.devLogout = () => window.FirebaseService.devLogout();
+  window.toggleDev = () => window.FirebaseService.toggleDevMode();
+  window.checkDev = () => window.FirebaseService.isDevMode();
+  
+  console.log('%c💡 Atalhos disponíveis no console:', 'color: #28a745; font-weight: bold;');
+  console.log('%c- devLogin() - Login rápido', 'color: #6c757d;');
+  console.log('%c- devLogout() - Logout rápido', 'color: #6c757d;');
+  console.log('%c- toggleDev() - Alternar modo', 'color: #6c757d;');
+  console.log('%c- checkDev() - Verificar status', 'color: #6c757d;');
+}
+// ===========================================
