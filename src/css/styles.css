@@ -9,6 +9,8 @@
   --light-color: #f5f6fa;
   --dark-color: #2d3436;
   --primary-gradient: linear-gradient(135deg, #a100ff, #e040fb, #9c27b0);
+  --dark-bg: #0D1B2A;
+  --light-bg: #F0F4F8;
 }
 
 body {
@@ -18,7 +20,7 @@ body {
 }
 
 .bg-dark {
-  background-color: #0D1B2A !important;
+  background-color: var(--dark-bg) !important;
 }
 
 .site-header {

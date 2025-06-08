@@ -5,6 +5,18 @@
   z-index: 1030;
 }
 
+.navbar::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--primary-gradient);
+  background-size: 400% 400%;
+  animation: gradientShift 3s ease infinite;
+}
+
 .navbar.fixed-top {
   animation: navbarSlideDown 0.3s ease;
 }
